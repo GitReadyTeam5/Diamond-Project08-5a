@@ -26,6 +26,7 @@ export default function TeacherLogin() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
+  // Define a client ID for Google Identity services
   const CLIENT_ID = "843146054096-pcjn6j6i1h9inpm58bre3c6rssb870fl.apps.googleusercontent.com";
 
   // Normal login
@@ -33,10 +34,9 @@ export default function TeacherLogin() {
     setLoading(true);
     let body = { identifier: email, password: password }; // Removed ".value"
 
-    console.log(body);
-
+    // Signs in user using provided email and password (Non-Google Sign In)
     postUser(body)
-      .then((response) => {
+      .then((response) => { // If user exists then redirect to corresponding role dashboard
         setUserSession(response.data.jwt, JSON.stringify(response.data.user));
         setLoading(false);
         if (response.data.user.role.name === 'Content Creator') {
@@ -47,7 +47,7 @@ export default function TeacherLogin() {
           navigate('/dashboard');
         }
       })
-      .catch((error) => {
+      .catch((error) => { // If user does not exist or information was incorrect
         setLoading(false);
         message.error('Login failed. Please input a valid email and password.');
 
@@ -64,20 +64,24 @@ export default function TeacherLogin() {
     console.log(userObject);
 
     // Verify integrity of token
-    try {
+    try { // *Occasionally gives issues when importing (11/2/2023)
+      // Creates new instance of authorization client
       const { OAuth2Client } = require('google-auth-library');
       const client = new OAuth2Client;
+
+      // Verifies token with verifyIdToken()
       async function verify() {
-        const ticket = await client.verifyIdToken({
+        const token = await client.verifyIdToken({
             idToken: userObject,
             audience: CLIENT_ID,
         });
 
-        const payload = ticket.getPayload();
-        const userID = payload['sub'];
+        // Gets token information from token payload
+        const payload = token.getPayload();
+        const userID = payload['sub']; // Pulls unique user ID from token
       }
       verify.catch(console.error); // Checks validity of token
-    } catch (error) {
+    } catch (error) { // Checks for OAuth import failure
       console.error('Error during import:', error);
     }
   
@@ -86,9 +90,10 @@ export default function TeacherLogin() {
     setEmail(userObject.email);
     let body = { identifier: userObject.email, password: 'password' }; // Need password??? // Removed ".value"
     
+    // Signs in user using Google Sign In services
     // Still uses a hardcode value: DO NOT DEPLOY IN THIS STATE
     postUser(body)
-      .then((response) => {
+      .then((response) => { // If user exists then redirect to corresponding role dashboard
         setUserSession(response.data.jwt, JSON.stringify(response.data.user)); 
         setLoading(false);
         if (response.data.user.role.name === 'Content Creator') {
@@ -99,7 +104,7 @@ export default function TeacherLogin() {
           navigate('/dashboard');
         }
       })
-      .catch((error) => {
+      .catch((error) => { // If user does not exist or information is incorrect
         setLoading(false);
         console.log(error);
         message.error('Login failed. Please input a valid email and password.');
@@ -112,12 +117,13 @@ export default function TeacherLogin() {
 
   // Init google client and render button on page load
   useEffect(() => {
-    /* global google */
+    /* global google */ // Linter declaration
     google.accounts.id.initialize({
       client_id: "843146054096-pcjn6j6i1h9inpm58bre3c6rssb870fl.apps.googleusercontent.com",
-      callback: handleGoogleLogin
+      callback: handleGoogleLogin // Callback for users using Google sign in
     });
 
+    // Renders button to direct user to Google
     google.accounts.id.renderButton(
       document.getElementById("signInDiv"),
       { theme: "filled_blue",
@@ -176,7 +182,7 @@ export default function TeacherLogin() {
         </form>
       </div>
 
-      {/* Show Sign In W Google Button */}
+      {/* Shows Sign In W Google Button */}
       <h2 style={SignInWGoogleText}>Sign in with Google:</h2>
       <div id="signInDiv" style={CenterGoogleBtn}></div>
     </div>

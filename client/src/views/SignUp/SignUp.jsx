@@ -3,8 +3,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NavBar from '../../components/NavBar/NavBar';
 import { postUser, setUserSession } from '../../Utils/AuthRequests';
-
 import { jwtDecode } from 'jwt-decode';
+import { getPublicRequestModule } from '../../../../test/integration/request';
+import axios from 'axios';
 
 const useFormInput = (initialValue) => {
   const [value, setValue] = useState(initialValue);
@@ -18,6 +19,37 @@ const useFormInput = (initialValue) => {
     onChange: handleChange,
   };
 };
+
+const createUser = (firstName, lastName) => {
+  const UserData = {
+    first_name: firstName,
+    last_name: lastName,
+}};
+
+//   fetch('/auth/local/register', {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify(mentorData),
+//   })
+//     .then((response) => {
+//       if (response.ok) {
+//         return response.json();
+//       } else {
+//         throw new Error('Failed to create a new User');
+//       }
+//     })
+//     .then((data) => {
+//       console.log('User created successfully:', data);
+//     })
+//     .catch((error) => {
+//       console.error('Error creating a new User', error);
+//     });
+// };
+
+
+//console.log(response);
 
 export default function SignUp() {
   const [email, setEmail] = useState('');
@@ -51,7 +83,12 @@ export default function SignUp() {
     console.log("Encoded JWT Token: " + res.credential)
     const userObject = jwtDecode(res.credential);
     console.log(userObject);
-
+    
+    const firstName = userObject.given_name;
+    const lastName = userObject.family_name;
+    
+    createUser(firstName, lastName);
+    
     setEmail(userObject.email);
 
     let body = { identifier: email };
@@ -73,6 +110,16 @@ export default function SignUp() {
         message.error('Login failed. Please input a valid email and password.');
       });
   };
+
+// const publicRequest= getPublicRequestModule();
+// axios.post('http://localhost:1337/auth/local/register', {
+//   // headers: {
+//   //        Authorization:res.credential
+//   //      },
+//   username: 'Shreya',
+//   email: 'tu@mail.com',
+//   password: '123456',
+// });
   
   useEffect(() => {
     /* global google */
@@ -132,7 +179,7 @@ export default function SignUp() {
             </p>
             <input
               type='button'
-              value={loading ? 'Loading...' : 'Create Account'}
+              value={loading ? 'Loading...' : 'Create Account'} 
               onClick={handleLogin}
               disabled={loading}
             />

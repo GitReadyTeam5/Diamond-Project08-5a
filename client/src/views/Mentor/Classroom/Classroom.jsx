@@ -7,6 +7,7 @@ import Roster from './Roster/Roster';
 import Home from './Home/Home';
 import SavedWorkSpaceTab from '../../../components/Tabs/SavedWorkspaceTab';
 import { useSearchParams, useParams } from 'react-router-dom';
+import GradesTab from '../../../components/Tabs/Grades';
 
 const { TabPane } = Tabs;
 
@@ -51,6 +52,13 @@ export default function Classroom({
             classroomId={id}
           />
         </TabPane>
+    <TabPane tab='Grades' key='grades'> 
+      <GradesTab 
+      searchParams={searchParams}
+      setSearchParams={setSearchParams}
+      classroomId={id}
+      /> 
+    </TabPane>
       </Tabs>
     </div>
   );

@@ -3,8 +3,9 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import NavBar from '../../components/NavBar/NavBar';
 import { postUser, setUserSession } from '../../Utils/AuthRequests';
-
 import { jwtDecode } from 'jwt-decode';
+import { getPublicRequestModule } from '../../../../test/integration/request';
+import axios from 'axios';
 
 const useFormInput = (initialValue) => {
   const [value, setValue] = useState(initialValue);
@@ -19,29 +20,112 @@ const useFormInput = (initialValue) => {
   };
 };
 
+const createUser = (firstName, lastName) => {
+  const UserData = {
+    first_name: firstName,
+    last_name: lastName,
+}};
+
+//   fetch('/auth/local/register', {
+//     method: 'POST',
+//     headers: {
+//       'Content-Type': 'application/json',
+//     },
+//     body: JSON.stringify(mentorData),
+//   })
+//     .then((response) => {
+//       if (response.ok) {
+//         return response.json();
+//       } else {
+//         throw new Error('Failed to create a new User');
+//       }
+//     })
+//     .then((data) => {
+//       console.log('User created successfully:', data);
+//     })
+//     .catch((error) => {
+//       console.error('Error creating a new User', error);
+//     });
+// };
+
+
+//console.log(response);
+
 export default function SignUp() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  const handleSignUp = () => {
-    
+  const handleLogin = () => {
+    setLoading(true);
+    let body = { identifier: email, password: password };
+
+    postUser(body)
+      .then((response) => {
+        setUserSession(response.data.jwt, JSON.stringify(response.data.user));
+        setLoading(false);
+        if (response.data.user.role.name === 'Content Creator') {
+          navigate('/ccdashboard');
+        } else if (response.data.user.role.name === 'Researcher') {
+          navigate('/report');
+        } else {
+          navigate('/dashboard');
+        }
+      })
+      .catch((error) => {
+        setLoading(false);
+        message.error('Login failed. Please input a valid email and password.');
+      });
   };
 
-  const handleGoogleSignup = (res) => {
+  const handleGoogleLogin = (res) => {
     console.log("Encoded JWT Token: " + res.credential)
     const userObject = jwtDecode(res.credential);
     console.log(userObject);
-
     
+    const firstName = userObject.given_name;
+    const lastName = userObject.family_name;
+    
+    createUser(firstName, lastName);
+    
+    setEmail(userObject.email);
+
+    let body = { identifier: email };
+    
+    postUser(body)
+      .then((response) => {
+        setUserSession(response.data.jwt, JSON.stringify(response.data.user));
+        setLoading(false);
+        if (response.data.user.role.name === 'Content Creator') {
+          navigate('/ccdashboard');
+        } else if (response.data.user.role.name === 'Researcher') {
+          navigate('/report');
+        } else {
+          navigate('/dashboard');
+        }
+      })
+      .catch((error) => {
+        setLoading(false);
+        message.error('Login failed. Please input a valid email and password.');
+      });
   };
+
+// const publicRequest= getPublicRequestModule();
+// axios.post('http://localhost:1337/auth/local/register', {
+//   // headers: {
+//   //        Authorization:res.credential
+//   //      },
+//   username: 'Shreya',
+//   email: 'tu@mail.com',
+//   password: '123456',
+// });
   
   useEffect(() => {
     /* global google */
     google.accounts.id.initialize({
       client_id: "843146054096-pcjn6j6i1h9inpm58bre3c6rssb870fl.apps.googleusercontent.com",
-      callback: handleGoogleSignup
+      callback: handleGoogleLogin
     });
 
     google.accounts.id.renderButton(
@@ -72,7 +156,7 @@ export default function SignUp() {
           <form
             id='box'
             onKeyPress={(e) => {
-              if (e.key === 'Enter') handleSignUp();
+              if (e.key === 'Enter') handleLogin();
             }}
           >
             <div id='box-title'>Sign Up</div>
@@ -95,8 +179,8 @@ export default function SignUp() {
             </p>
             <input
               type='button'
-              value={loading ? 'Loading...' : 'Create Account'}
-              onClick={handleSignUp}
+              value={loading ? 'Loading...' : 'Create Account'} 
+              onClick={handleLogin}
               disabled={loading}
             />
           </form>

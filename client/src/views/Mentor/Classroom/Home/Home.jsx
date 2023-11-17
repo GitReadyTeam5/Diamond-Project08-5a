@@ -92,6 +92,9 @@ export default function Home({ classroomId, viewing }) {
       <button id='home-back-btn' onClick={handleBack}>
         <i className='fa fa-arrow-left' aria-hidden='true' />
       </button>
+      <button id='display-grades-btn'>
+      Display Grades
+    </button>
       <DisplayCodeModal code={classroom.code} />
       <MentorSubHeader title={classroom.name}></MentorSubHeader>
       <div id='home-content-container'>

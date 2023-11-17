@@ -664,6 +664,9 @@
               "role": {
                 "type": "string"
               },
+              "GoogleID": {
+                "type": "uid"
+              },
               "created_by": {
                 "type": "string"
               },

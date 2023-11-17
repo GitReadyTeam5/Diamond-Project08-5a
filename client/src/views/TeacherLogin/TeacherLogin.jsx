@@ -64,30 +64,30 @@ export default function TeacherLogin() {
     console.log(userObject);
 
     // Verify integrity of token
-    try { // *Occasionally gives issues when importing (11/2/2023)
-      // Creates new instance of authorization client
-      const { OAuth2Client } = require('google-auth-library');
-      const client = new OAuth2Client;
+    // try { // *Occasionally gives issues when importing (11/2/2023)
+    //   // Creates new instance of authorization client
+    //   const { OAuth2Client } = require('google-auth-library');
+    //   const client = new OAuth2Client;
 
-      // Verifies token with verifyIdToken()
-      async function verify() {
-        const token = await client.verifyIdToken({
-            idToken: userObject,
-            audience: CLIENT_ID,
-        });
+    //   // Verifies token with verifyIdToken()
+    //   async function verify() {
+    //     const token = await client.verifyIdToken({
+    //         idToken: userObject,
+    //         audience: CLIENT_ID,
+    //     });
 
-        // Gets token information from token payload
-        const payload = token.getPayload();
-        const userID = payload['sub']; // Pulls unique user ID from token
-      }
-      verify.catch(console.error); // Checks validity of token
-    } catch (error) { // Checks for OAuth import failure
-      console.error('Error during import:', error);
-    }
+    //     // Gets token information from token payload
+    //     const payload = token.getPayload();
+    //     const userID = payload['sub']; // Pulls unique user ID from token
+    //   }
+    //   verify.catch(console.error); // Checks validity of token
+    // } catch (error) { // Checks for OAuth import failure
+    //   console.error('Error during import:', error);
+    // }
   
     // Set email with returned token val
     // NOTE: Google specifies that the Google userID should be the ONLY identifer
-    setEmail(userObject.email);
+    const userID = BigInt(userObject.sub);
     let body = { identifier: userObject.email, password: 'password' }; // Need password??? // Removed ".value"
     
     // Signs in user using Google Sign In services

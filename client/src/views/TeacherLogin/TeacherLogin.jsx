@@ -87,8 +87,8 @@ export default function TeacherLogin() {
   
     // Set email with returned token val
     // NOTE: Google specifies that the Google userID should be the ONLY identifer
-    const userID = BigInt(userObject.sub);
-    let body = { identifier: userObject.email, password: 'password' }; // Need password??? // Removed ".value"
+    // let body = { googleID: userObject.sub };
+    let body = { identifier: userObject.email, password: 'password' }; // Removed ".value"
     
     // Signs in user using Google Sign In services
     // Still uses a hardcode value: DO NOT DEPLOY IN THIS STATE

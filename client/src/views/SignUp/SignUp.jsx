@@ -49,7 +49,7 @@ export default function SignUp() {
     console.log("Encoded JWT ID Token: " + res.credential)
     const userObject = jwtDecode(res.credential);
     console.log(userObject);
-
+    
     const firstName = userObject.given_name;
     const lastName = userObject.family_name;
     const email = userObject.email;
@@ -70,8 +70,8 @@ axios.post('http://localhost:1337/api/users', {
   // Additional logic after user creation
 }).catch(error => {
   console.error('Error creating user:', error);
-});
-};
+      });
+  };
 
 axios
   .post('http://localhost:1337/auth/local/register', {
@@ -88,7 +88,7 @@ axios
     // Handle error.
     console.log('An error occurred:', error.response);
   });
-
+  
   useEffect(() => {
     /* global google */
     google.accounts.id.initialize({
@@ -145,7 +145,7 @@ axios
             </p>
             <input
               type='button'
-              value={loading ? 'Loading...' : 'Create Account'}
+              value={loading ? 'Loading...' : 'Create Account'} 
               onClick={handleLogin}
               disabled={loading}
             />

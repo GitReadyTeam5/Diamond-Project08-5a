@@ -1,71 +1,90 @@
 import React, { useState, useEffect } from 'react';
-import { Table, Spin } from 'antd';
-import { Link } from 'react-router-dom';
+import { Table, message } from 'antd';
+import { getStudentGradesByClassroomID, getStudent, getActivity } from '../../Utils/requests';
 
-export default function GradesTab({ searchParams, setSearchParams }) {
-  const [assignments, setAssignments] = useState([]);
-  const [loading, setLoading] = useState(true);
+const Grades = ({ classroomId }) => {
+  const [grades, setGrades] = useState([]);
+  const [error, setError] = useState(null);
 
-  const [page, setPage] = useState(
-    searchParams.has('page') ? parseInt(searchParams.get('page')) : 1
-  );
 
-  const assignmentColumns = [
-    {
-      title: 'Name',
-      dataIndex: 'name',
-      key: 'name',
-      width: '100%',
-      render: (text, record) => (
-        <Link to={`/assignments/${record.id}`}>{text}</Link>
-      ),
-    },
-  ];
 
   useEffect(() => {
-    const fetchAssignments = async () => {
-      try {
-        const response = await fetch('http://localhost:1337/activities?_limit=40'); // Replace with your actual API endpoint
-        const data = await response.json();
-        console.log("TEstststssttstst")
-        setAssignments(data);
-      } catch (error) {
-        console.error('Error fetching assignments:', error);
-      } finally {
-        setLoading(false);
+    console.log('Classroom ID:', classroomId); // Log the classroom ID
+    const fetchGrades = async () => {
+      const { data, err } = await getStudentGradesByClassroomID(classroomId);
+      if (err) {
+        setError(err);
+        message.error(err);
+        return;
       }
+      const gradesWithDetails = await Promise.all(data.map(async (grade) => {
+        try {
+          const [studentResponse, activityResponse] = await Promise.all([
+            getStudent(grade.submission.student),
+            getActivity(grade.submission.activity)
+          ]);
+          return { 
+            ...grade, 
+            studentName: studentResponse.data.name,
+            activityName: activityResponse.data.StandardS // Assuming the activity name is in StandardS
+          };
+        } catch (e) {
+          console.error('Error fetching additional data:', e);
+          return grade; // Return the original grade if there's an error
+        }
+      }));
+
+      setGrades(gradesWithDetails);
     };
 
-    fetchAssignments();
-  }, []); // Empty dependency array means this effect runs once when the component mounts
+    fetchGrades();
+  }, []);
 
-  if (loading) {
-    return <Spin />; // Display a loading spinner while data is being fetched
+  const columns = [
+    {
+      title: 'Activity',
+      dataIndex: 'activityName', // Updated to use the fetched activity name
+      key: 'activity',
+      width: 200,
+    },
+    {
+      title: 'Student',
+      dataIndex: 'studentName',
+      key: 'student',
+      width: 100,
+    },
+    {
+      title: 'Grade',
+      dataIndex: 'Grade',
+      key: 'grade',
+    },
+    {
+      title: 'Comments',
+      dataIndex: 'Comments',
+      key: 'comments',
+    },
+    // Add more columns as necessary
+  ];
+
+  if (error) {
+    return <div>Error: {error}</div>;
   }
 
   return (
+    
     <div>
-      <div id='page-header'>
-        <h1>Assignments</h1>
+      <div id='page-header' style={{ marginBottom: '20px' }}>
+        <h1>Select Assignment to view Grades</h1>
       </div>
-      <div
-        id='assignments-table-container'
-        style={{ marginTop: '6.6vh', maxWidth: '800px', margin: 'auto' }}
-      >
+      <div id='content-creator-table-container' style={{ marginTop: '7vh' }}>
         <Table
-          columns={assignmentColumns}
-          dataSource={assignments}
+          columns={columns}
+          dataSource={grades}
           rowKey='id'
-          pagination={{
-            current: page,
-            onChange: (newPage) => {
-              setPage(newPage);
-              setSearchParams({ page: newPage });
-            },
-          }}
-          style={{ width: '100%' }}
         />
       </div>
     </div>
   );
-}
+};
+
+export default Grades;

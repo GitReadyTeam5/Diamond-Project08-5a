@@ -4,22 +4,17 @@ import { useNavigate } from 'react-router-dom';
 import NavBar from '../../components/NavBar/NavBar';
 import { postUser, setUserSession } from '../../Utils/AuthRequests';
 import { jwtDecode } from 'jwt-decode';
-import { getPublicRequestModule } from '../../../../test/integration/request';
 import axios from 'axios';
-
 const useFormInput = (initialValue) => {
   const [value, setValue] = useState(initialValue);
-
   const handleChange = (e) => {
     setValue(e.target.value);
   };
-
   return {
     value,
     onChange: handleChange,
   };
 };
-
 const createUser = (firstName, lastName) => {
   const UserData = {
     first_name: firstName,
@@ -56,11 +51,9 @@ export default function SignUp() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-
   const handleLogin = () => {
     setLoading(true);
     let body = { identifier: email, password: password };
-
     postUser(body)
       .then((response) => {
         setUserSession(response.data.jwt, JSON.stringify(response.data.user));
@@ -78,56 +71,56 @@ export default function SignUp() {
         message.error('Login failed. Please input a valid email and password.');
       });
   };
-
   const handleGoogleLogin = (res) => {
-    console.log("Encoded JWT Token: " + res.credential)
+    console.log("Encoded JWT ID Token: " + res.credential)
     const userObject = jwtDecode(res.credential);
     console.log(userObject);
-    
+
     const firstName = userObject.given_name;
     const lastName = userObject.family_name;
-    
-    createUser(firstName, lastName);
-    
-    setEmail(userObject.email);
+    const email = userObject.email;
+    const googleId = userObject.sub; 
 
-    let body = { identifier: email };
-    
-    postUser(body)
-      .then((response) => {
-        setUserSession(response.data.jwt, JSON.stringify(response.data.user));
-        setLoading(false);
-        if (response.data.user.role.name === 'Content Creator') {
-          navigate('/ccdashboard');
-        } else if (response.data.user.role.name === 'Researcher') {
-          navigate('/report');
-        } else {
-          navigate('/dashboard');
-        }
-      })
-      .catch((error) => {
-        setLoading(false);
-        message.error('Login failed. Please input a valid email and password.');
-      });
-  };
+    console.log("Last Name", lastName)
+    console.log("First Name", firstName)
+    console.log("Email", email)
 
-// const publicRequest= getPublicRequestModule();
-// axios.post('http://localhost:1337/auth/local/register', {
-//   // headers: {
-//   //        Authorization:res.credential
-//   //      },
-//   username: 'Shreya',
-//   email: 'tu@mail.com',
-//   password: '123456',
-// });
-  
+// Create a new user
+axios.post('http://localhost:1337/api/users', {
+  email: email,
+  username: firstName + lastName,
+  password: 'default', // You might want to generate a random password instead
+  googleID: googleId
+}).then(response => {
+  console.log('User created:', response.data);
+  // Additional logic after user creation
+}).catch(error => {
+  console.error('Error creating user:', error);
+});
+};
+
+axios
+  .post('http://localhost:1337/auth/local/register', {
+    identifier: 'user@strapi.io',
+    password: 'strapiPassword',
+  })
+  .then(response => {
+    // Handle success.
+    console.log('Well done!');
+    console.log('User profile', response.data.user);
+    console.log('User token', response.data.jwt);
+  })
+  .catch(error => {
+    // Handle error.
+    console.log('An error occurred:', error.response);
+  });
+
   useEffect(() => {
     /* global google */
     google.accounts.id.initialize({
       client_id: "843146054096-pcjn6j6i1h9inpm58bre3c6rssb870fl.apps.googleusercontent.com",
       callback: handleGoogleLogin
     });
-
     google.accounts.id.renderButton(
       document.getElementById("signInDiv"),
       { theme: "filled_blue",
@@ -136,6 +129,7 @@ export default function SignUp() {
       });
   }, []);
 
+
   // Sign in text and Google Button
   const CenterGoogleBtn = {
     display: 'flex',
@@ -143,11 +137,9 @@ export default function SignUp() {
     alignItems: 'center', // Center vertically
     height: '5vh', // Adjust to your preferred height
   };
-
   const SignInWGoogleText = {
     color: 'white'
   }
-
   return (
     <>
       <div className='container nav-padding'>
@@ -179,13 +171,12 @@ export default function SignUp() {
             </p>
             <input
               type='button'
-              value={loading ? 'Loading...' : 'Create Account'} 
+              value={loading ? 'Loading...' : 'Create Account'}
               onClick={handleLogin}
               disabled={loading}
             />
           </form>
         </div>
-
       {/* Show Sign In W Google Button */}
       <h2 style={SignInWGoogleText}>Continue with Google:</h2>
       <div id="signInDiv" style={CenterGoogleBtn}></div>

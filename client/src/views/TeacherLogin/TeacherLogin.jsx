@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import NavBar from '../../components/NavBar/NavBar';
 import { postUser, setUserSession } from '../../Utils/AuthRequests';
 import './TeacherLogin.less';
+import axios from 'axios';
+
 
 // Additions
 import { jwtDecode } from 'jwt-decode';
@@ -57,7 +59,6 @@ export default function TeacherLogin() {
       });
   };
 
-  // Google login
   const handleGoogleLogin = (res) => {
     const userObject = jwtDecode(res.credential); // Get user info for login
   
@@ -70,24 +71,25 @@ export default function TeacherLogin() {
       .then((response) => { // If user exists then redirect to corresponding role dashboard
         setUserSession(response.data.jwt, JSON.stringify(response.data.user)); 
         setLoading(false);
-        if (response.data.user.role.name === 'Content Creator') {
+
+        // Navigate based on the user's role
+        if (userObject.role.name === 'Content Creator') {
           navigate('/ccdashboard');
-        } else if (response.data.user.role.name === 'Researcher') {
+        } else if (userObject.role.name === 'Researcher') {
           navigate('/report');
         } else {
           navigate('/dashboard');
         }
-      })
-      .catch((error) => { // If user does not exist or information is incorrect
-        setLoading(false);
-        console.log(error);
-        message.error('Login failed. Please input a valid email and password.');
+      }
+    )
+    .catch(error => {
+      console.error('Token verification failed:', error);
+      setLoading(false);
+      message.error('Google login failed.');
+    });
+};
 
-        // Clear input fields
-        setEmail('');
-        setPassword('');
-      });
-  };
+
 
   // Init google client and render button on page load
   useEffect(() => {

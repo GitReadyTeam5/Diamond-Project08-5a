@@ -1,6 +1,6 @@
 {
   "paths": {
-    "/selections": {
+    "/student-grades/classroom/{classroomID}": {
       "get": {
         "deprecated": false,
         "description": "",
@@ -10,9 +10,10 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/Selection"
+                  "properties": {
+                    "foo": {
+                      "type": "string"
+                    }
                   }
                 }
               }
@@ -51,7 +52,75 @@
         },
         "summary": "",
         "tags": [
-          "Selection"
+          "Student-grade"
+        ],
+        "parameters": [
+          {
+            "name": "classroomID",
+            "in": "path",
+            "description": "",
+            "deprecated": false,
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/student-grades": {
+      "get": {
+        "deprecated": false,
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "foo": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Student-grade"
         ],
         "parameters": [
           {
@@ -201,72 +270,9 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Selection"
-                }
-              }
-            }
-          },
-          "403": {
-            "description": "Forbidden",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          },
-          "default": {
-            "description": "unexpected error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/Error"
-                }
-              }
-            }
-          }
-        },
-        "summary": "",
-        "tags": [
-          "Selection"
-        ],
-        "requestBody": {
-          "description": "",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/NewSelection"
-              }
-            }
-          }
-        }
-      }
-    },
-    "/selections/count": {
-      "get": {
-        "deprecated": false,
-        "description": "",
-        "responses": {
-          "200": {
-            "description": "response",
-            "content": {
-              "application/json": {
-                "schema": {
                   "properties": {
-                    "count": {
-                      "type": "integer"
+                    "foo": {
+                      "type": "string"
                     }
                   }
                 }
@@ -306,12 +312,22 @@
         },
         "summary": "",
         "tags": [
-          "Selection"
+          "Student-grade"
         ],
-        "parameters": []
+        "requestBody": {
+          "description": "",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NewStudent-grade"
+              }
+            }
+          }
+        }
       }
     },
-    "/selections/{id}": {
+    "/student-grades/count": {
       "get": {
         "deprecated": false,
         "description": "",
@@ -321,7 +337,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Selection"
+                  "properties": {
+                    "foo": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
@@ -359,7 +379,64 @@
         },
         "summary": "",
         "tags": [
-          "Selection"
+          "Student-grade"
+        ],
+        "parameters": []
+      }
+    },
+    "/student-grades/{id}": {
+      "get": {
+        "deprecated": false,
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "properties": {
+                    "foo": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "unexpected error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        },
+        "summary": "",
+        "tags": [
+          "Student-grade"
         ],
         "parameters": [
           {
@@ -383,7 +460,11 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/Selection"
+                  "properties": {
+                    "foo": {
+                      "type": "string"
+                    }
+                  }
                 }
               }
             }
@@ -421,7 +502,7 @@
         },
         "summary": "",
         "tags": [
-          "Selection"
+          "Student-grade"
         ],
         "requestBody": {
           "description": "",
@@ -429,7 +510,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/NewSelection"
+                "$ref": "#/components/schemas/NewStudent-grade"
               }
             }
           }
@@ -495,7 +576,7 @@
         },
         "summary": "",
         "tags": [
-          "Selection"
+          "Student-grade"
         ],
         "parameters": [
           {
@@ -514,67 +595,76 @@
   },
   "components": {
     "schemas": {
-      "Selection": {
+      "Student-grade": {
         "required": [
-          "id",
-          "current"
+          "id"
         ],
         "properties": {
           "id": {
             "type": "string"
           },
-          "classroom": {
+          "Grade": {
+            "type": "string"
+          },
+          "Comments": {
+            "type": "string"
+          },
+          "submission": {
             "required": [
               "id",
-              "code"
+              "status",
+              "workspace",
+              "board",
+              "sketch",
+              "sandbox"
             ],
             "properties": {
               "id": {
                 "type": "string"
               },
-              "name": {
+              "status": {
                 "type": "string"
               },
-              "school": {
+              "workspace": {
                 "type": "string"
               },
-              "sessions": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
+              "success": {
+                "type": "boolean"
               },
-              "mentors": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "students": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "code": {
+              "hex": {
                 "type": "string"
               },
-              "grade": {
+              "stdout": {
                 "type": "string"
               },
-              "selections": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
+              "stderr": {
+                "type": "string"
               },
-              "authorized_workspaces": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
+              "board": {
+                "type": "string"
               },
-              "submission": {
+              "sketch": {
+                "type": "string"
+              },
+              "sandbox": {
+                "type": "boolean"
+              },
+              "session": {
+                "type": "string"
+              },
+              "activity": {
+                "type": "string"
+              },
+              "job_id": {
+                "type": "integer"
+              },
+              "student": {
+                "type": "string"
+              },
+              "classroom": {
+                "type": "string"
+              },
+              "student_grade": {
                 "type": "string"
               },
               "created_by": {
@@ -585,68 +675,26 @@
               }
             }
           },
-          "lesson_module": {
-            "required": [
-              "id",
-              "number",
-              "name"
-            ],
-            "properties": {
-              "id": {
-                "type": "string"
-              },
-              "number": {
-                "type": "number"
-              },
-              "name": {
-                "type": "string"
-              },
-              "expectations": {
-                "type": "string"
-              },
-              "activities": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                }
-              },
-              "unit": {
-                "type": "string"
-              },
-              "standards": {
-                "type": "string"
-              },
-              "link": {
-                "type": "string"
-              },
-              "created_by": {
-                "type": "string"
-              },
-              "updated_by": {
-                "type": "string"
-              }
-            }
-          },
-          "current": {
-            "type": "boolean",
-            "default": true
+          "published_at": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
-      "NewSelection": {
-        "required": [
-          "current"
-        ],
+      "NewStudent-grade": {
         "properties": {
-          "classroom": {
+          "Grade": {
             "type": "string"
           },
-          "lesson_module": {
+          "Comments": {
             "type": "string"
           },
-          "current": {
-            "type": "boolean",
-            "default": true
+          "submission": {
+            "type": "string"
+          },
+          "published_at": {
+            "type": "string",
+            "format": "date-time"
           },
           "created_by": {
             "type": "string"
@@ -658,9 +706,5 @@
       }
     }
   },
-  "tags": [
-    {
-      "name": "Selection"
-    }
-  ]
+  "tags": []
 }

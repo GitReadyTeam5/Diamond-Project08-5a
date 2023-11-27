@@ -573,6 +573,9 @@
                   "type": "string"
                 }
               },
+              "submission": {
+                "type": "string"
+              },
               "created_by": {
                 "type": "string"
               },
@@ -672,6 +675,15 @@
                 },
                 "job_id": {
                   "type": "integer"
+                },
+                "student": {
+                  "type": "string"
+                },
+                "classroom": {
+                  "type": "string"
+                },
+                "student_grade": {
+                  "type": "string"
                 },
                 "created_by": {
                   "type": "string"

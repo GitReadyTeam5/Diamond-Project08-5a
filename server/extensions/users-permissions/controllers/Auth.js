@@ -34,38 +34,47 @@ module.exports = {
         return ctx.badRequest(null, 'This provider is disabled.');
       }
 
-      // The identifier is required.
-      if (!params.identifier) {
-        return ctx.badRequest(
-          null,
-          formatError({
-            id: 'Auth.form.error.email.provide',
-            message: 'Please provide your username or your e-mail.',
-          })
-        );
-      }
-
-      // The password is required.
-      if (!params.password) {
-        return ctx.badRequest(
-          null,
-          formatError({
-            id: 'Auth.form.error.password.provide',
-            message: 'Please provide your password.',
-          })
-        );
-      }
-
       const query = { provider };
 
-      // Check if the provided identifier is an email or not.
-      const isEmail = emailRegExp.test(params.identifier);
+      // If logged in with email & password
+      if (!params.GoogleID)
+      {
+        // The identifier is required.
+        if (!params.identifier) {
+          return ctx.badRequest(
+            null,
+            formatError({
+              id: 'Auth.form.error.email.provide',
+              message: 'Please provide your username or your e-mail.',
+            })
+          );
+        }
 
-      // Set the identifier to the appropriate query field.
-      if (isEmail) {
-        query.email = params.identifier.toLowerCase();
-      } else {
-        query.username = params.identifier;
+        // The password is required.
+        if (!params.password) {
+          return ctx.badRequest(
+            null,
+            formatError({
+              id: 'Auth.form.error.password.provide',
+              message: 'Please provide your password.',
+            })
+          );
+        }
+
+        // Check if the provided identifier is an email or not.
+        const isEmail = emailRegExp.test(params.identifier);
+
+        // Set the identifier to the appropriate query field.
+        if (isEmail) {
+          query.email = params.identifier.toLowerCase();
+        } else {
+          query.username = params.identifier;
+        }
+      }
+      else 
+      {
+        // Add GoogleID to query
+        query.GoogleID = params.GoogleID;
       }
 
       // Check if the user exists.
@@ -118,33 +127,47 @@ module.exports = {
         );
       }
 
-      const validPassword = await strapi.plugins[
-        'users-permissions'
-      ].services.user.validatePassword(params.password, user.password);
+      // const validPassword = await strapi.plugins[
+      //   'users-permissions'
+      // ].services.user.validatePassword(params.password, user.password);
 
-      if (!validPassword) {
-        return ctx.badRequest(
-          null,
-          formatError({
-            id: 'Auth.form.error.invalid',
-            message: 'Identifier or password invalid.',
-          })
-        );
-      } else {
-        // update last_logged_in for user
-        await strapi
-          .query('user', 'users-permissions')
-          .update({ id: user.id }, { last_logged_in: new Date() });
+      // if (!validPassword) {
+      //   return ctx.badRequest(
+      //     null,
+      //     formatError({
+      //       id: 'Auth.form.error.invalid',
+      //       message: 'Identifier or password invalid.',
+      //     })
+      //   );
+      // } else {
+      //   // update last_logged_in for user
+      //   await strapi
+      //     .query('user', 'users-permissions')
+      //     .update({ id: user.id }, { last_logged_in: new Date() });
 
-        ctx.send({
-          jwt: strapi.plugins['users-permissions'].services.jwt.issue({
-            id: user.id,
-          }),
-          user: sanitizeEntity(user.toJSON ? user.toJSON() : user, {
-            model: strapi.query('user', 'users-permissions').model,
-          }),
-        });
-      }
+      //   ctx.send({
+      //     jwt: strapi.plugins['users-permissions'].services.jwt.issue({
+      //       id: user.id,
+      //     }),
+      //     user: sanitizeEntity(user.toJSON ? user.toJSON() : user, {
+      //       model: strapi.query('user', 'users-permissions').model,
+      //     }),
+      //   });
+      // }
+
+      // update last_logged_in for user
+      await strapi
+      .query('user', 'users-permissions')
+      .update({ id: user.id }, { last_logged_in: new Date() });
+
+      ctx.send({
+        jwt: strapi.plugins['users-permissions'].services.jwt.issue({
+          id: user.id,
+        }),
+        user: sanitizeEntity(user.toJSON ? user.toJSON() : user, {
+          model: strapi.query('user', 'users-permissions').model,
+        }),
+      });
     } else {
       if (!_.get(await store.get({ key: 'grant' }), [provider, 'enabled'])) {
         return ctx.badRequest(

@@ -59,39 +59,13 @@ export default function TeacherLogin() {
 
   // Google login
   const handleGoogleLogin = (res) => {
-    console.log("Encoded JWT Token: " + res.credential)
     const userObject = jwtDecode(res.credential); // Get user info for login
-    console.log(userObject);
-
-    // Verify integrity of token
-    // try { // *Occasionally gives issues when importing (11/2/2023)
-    //   // Creates new instance of authorization client
-    //   const { OAuth2Client } = require('google-auth-library');
-    //   const client = new OAuth2Client;
-
-    //   // Verifies token with verifyIdToken()
-    //   async function verify() {
-    //     const token = await client.verifyIdToken({
-    //         idToken: userObject,
-    //         audience: CLIENT_ID,
-    //     });
-
-    //     // Gets token information from token payload
-    //     const payload = token.getPayload();
-    //     const userID = payload['sub']; // Pulls unique user ID from token
-    //   }
-    //   verify.catch(console.error); // Checks validity of token
-    // } catch (error) { // Checks for OAuth import failure
-    //   console.error('Error during import:', error);
-    // }
   
-    // Set email with returned token val
+    // Set GoogleID with returned token val
     // NOTE: Google specifies that the Google userID should be the ONLY identifer
-    // let body = { googleID: userObject.sub };
-    let body = { identifier: userObject.email, password: 'password' }; // Removed ".value"
+    let body = { GoogleID: userObject.sub };
     
     // Signs in user using Google Sign In services
-    // Still uses a hardcode value: DO NOT DEPLOY IN THIS STATE
     postUser(body)
       .then((response) => { // If user exists then redirect to corresponding role dashboard
         setUserSession(response.data.jwt, JSON.stringify(response.data.user)); 

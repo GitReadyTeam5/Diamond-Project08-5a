@@ -51,6 +51,7 @@ export default function SignUp() {
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+
   const handleLogin = () => {
     setLoading(true);
     let body = { identifier: email, password: password };
@@ -88,9 +89,9 @@ export default function SignUp() {
 // Create a new user
 axios.post('http://localhost:1337/api/users', {
   email: email,
-  username: firstName + lastName,
+  username: email,
   password: 'default', // You might want to generate a random password instead
-  googleID: googleId
+  GoogleID: googleId
 }).then(response => {
   console.log('User created:', response.data);
   // Additional logic after user creation

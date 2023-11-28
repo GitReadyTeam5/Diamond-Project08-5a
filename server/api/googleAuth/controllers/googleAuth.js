@@ -1,5 +1,5 @@
 const { OAuth2Client } = require('google-auth-library');
-const client = new OAuth2Client("770928523351-1b7sbtjeoloc1i675t92f0ko31ckaojn.apps.googleusercontent.com");
+const client = new OAuth2Client("843146054096-pcjn6j6i1h9inpm58bre3c6rssb870fl.apps.googleusercontent.com");
 
 function generateRandomString(length) {
   let result = '';
@@ -18,7 +18,7 @@ module.exports = {
       try {
         ticket = await client.verifyIdToken({
             idToken: token,
-            audience: "770928523351-1b7sbtjeoloc1i675t92f0ko31ckaojn.apps.googleusercontent.com",
+            audience: "843146054096-pcjn6j6i1h9inpm58bre3c6rssb870fl.apps.googleusercontent.com",
         });
       } catch (error) {
         ctx.throw(400, 'Invalid Google token');

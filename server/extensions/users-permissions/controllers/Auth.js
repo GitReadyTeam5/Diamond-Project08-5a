@@ -36,6 +36,8 @@ module.exports = {
 
       const query = { provider };
 
+      console.log(params.GoogleID);
+
       // If logged in with email & password
       if (!params.GoogleID)
       {

@@ -28,17 +28,15 @@ export default function TeacherLogin() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Define a client ID for Google Identity services
-  const CLIENT_ID = "843146054096-pcjn6j6i1h9inpm58bre3c6rssb870fl.apps.googleusercontent.com";
-
   // Normal login
   const handleLogin = () => {
     setLoading(true);
     let body = { identifier: email, password: password }; // Removed ".value"
 
-    // Signs in user using provided email and password (Non-Google Sign In)
+    console.log(body);
+
     postUser(body)
-      .then((response) => { // If user exists then redirect to corresponding role dashboard
+      .then((response) => {
         setUserSession(response.data.jwt, JSON.stringify(response.data.user));
         setLoading(false);
         if (response.data.user.role.name === 'Content Creator') {
@@ -49,7 +47,7 @@ export default function TeacherLogin() {
           navigate('/dashboard');
         }
       })
-      .catch((error) => { // If user does not exist or information was incorrect
+      .catch((error) => {
         setLoading(false);
         message.error('Login failed. Please input a valid email and password.');
 
@@ -60,16 +58,38 @@ export default function TeacherLogin() {
   };
 
   const handleGoogleLogin = (res) => {
-    const userObject = jwtDecode(res.credential); // Get user info for login
-  
-    // Set GoogleID with returned token val
-    // NOTE: Google specifies that the Google userID should be the ONLY identifer
-    let body = { GoogleID: userObject.sub };
-    
-    // Signs in user using Google Sign In services
-    postUser(body)
-      .then((response) => { // If user exists then redirect to corresponding role dashboard
-        setUserSession(response.data.jwt, JSON.stringify(response.data.user)); 
+    console.log("Encoded JWT Token: " + res.credential);
+    const token = res.credential; // Get the token from Google response
+
+    // Send the token to your Strapi backend for verification
+    axios.post('http://localhost:1337/api/googleAuth/verify-google-token', { token })
+    .then(response => {
+      // Check if the response includes a new user object
+      if (response.data.newUser) {
+        // Sign up the new user using the response data
+        const newUser = response.data.newUser;
+        console.log(newUser)
+        axios.post('http://localhost:1337/api/users', newUser)
+        .then(signUpResponse => {
+          // Handle successful sign-up (e.g., set user session, navigate)
+          console.log('User signed up successfully:', signUpResponse.data);
+          // You might want to set the user session here as well
+          // ...
+          // Stay on the same page and display a success message
+          message.success('Google User Registered Successfully');
+
+        })
+        .catch(signUpError => {
+          console.error('Sign-up failed:', signUpError);
+          setLoading(false);
+          message.error('Sign-up through Google failed.');
+        });
+      } else {
+        // Existing user logic
+        const userObject = response.data.user; // Extract user data from the backend response
+
+        // Set user session with the JWT and user data received from the backend
+        setUserSession(response.data.jwt, JSON.stringify(userObject));
         setLoading(false);
 
         // Navigate based on the user's role
@@ -81,7 +101,7 @@ export default function TeacherLogin() {
           navigate('/dashboard');
         }
       }
-    )
+    })
     .catch(error => {
       console.error('Token verification failed:', error);
       setLoading(false);
@@ -93,13 +113,12 @@ export default function TeacherLogin() {
 
   // Init google client and render button on page load
   useEffect(() => {
-    /* global google */ // Linter declaration
+    /* global google */
     google.accounts.id.initialize({
       client_id: "843146054096-pcjn6j6i1h9inpm58bre3c6rssb870fl.apps.googleusercontent.com",
-      callback: handleGoogleLogin // Callback for users using Google sign in
+      callback: handleGoogleLogin
     });
 
-    // Renders button to direct user to Google
     google.accounts.id.renderButton(
       document.getElementById("signInDiv"),
       { theme: "filled_blue",
@@ -158,7 +177,7 @@ export default function TeacherLogin() {
         </form>
       </div>
 
-      {/* Shows Sign In W Google Button */}
+      {/* Show Sign In W Google Button */}
       <h2 style={SignInWGoogleText}>Sign in with Google:</h2>
       <div id="signInDiv" style={CenterGoogleBtn}></div>
     </div>

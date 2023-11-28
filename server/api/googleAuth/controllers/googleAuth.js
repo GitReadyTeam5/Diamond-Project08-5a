@@ -27,7 +27,7 @@ module.exports = {
       const payload = ticket.getPayload();
       const email = payload['email'];
       const username = `${payload['given_name']} ${payload['family_name']}`;
-      const googleID = payload['sub'];
+      const GoogleID = payload['sub'];
       const randomPassword = generateRandomString(12); // Generate a 12-character random string
   
       // Find user in Strapi
@@ -40,7 +40,7 @@ module.exports = {
           email,
           password: randomPassword,
           provider: 'google',
-          googleID,
+          GoogleID,
           confirmed: true,
           blocked: false,
         };

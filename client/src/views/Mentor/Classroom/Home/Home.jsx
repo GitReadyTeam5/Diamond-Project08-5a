@@ -261,3 +261,22 @@ export default function Home({ classroomId, viewing }) {
     </div>
   );
 }
+
+
+/*
+function execute() {
+  return gapi.client.classroom.courses.courseWork.create({
+    "courseId": "637487891414",
+    "resource": {
+      "title": "Hello",
+      "workType": "ASSIGNMENT",
+      "description": "New Assignment for the Demo"
+    }
+  })
+      .then(function(response) {
+              // Handle the results here (response.result has the parsed body).
+              console.log("Response", response);
+            },
+            function(err) { console.error("Execute error", err); });
+}
+*/

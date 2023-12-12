@@ -2,14 +2,19 @@
 
 # Features Implemented:
 * Correct sign-in functionality using a Google UID.
+![image](https://github.com/GitReadyTeam5/Diamond-Project08-5a/assets/90479750/84cb992b-287c-40c0-bfdd-09c32b31af5c)
 * Google sign-up functionality integration with the preexisting account format.
 * Collection of user’s data: Google Email and ID from adding the user to the Database.
+![image](https://github.com/GitReadyTeam5/Diamond-Project08-5a/assets/90479750/a8097939-0758-42fe-96e5-ae8856bc3409)
 * Google Token verification for sign-in/sign-up.
+![image](https://github.com/GitReadyTeam5/Diamond-Project08-5a/assets/90479750/5b39334f-ebdb-403b-bc3e-71ceef074b09)
 * Google Classroom Assignments created from codesparks
+![image](https://github.com/GitReadyTeam5/Diamond-Project08-5a/assets/90479750/bb6c6c8d-88af-4fa4-8b9e-d9e824db4558)
 * Google Classroom Grades transferred from codesparks
+![image](https://github.com/GitReadyTeam5/Diamond-Project08-5a/assets/90479750/6a04cc25-632f-428e-8d4b-b1a104ce2288)
 * Google Drive Upload/Retrieve feature
 * Codesparks Rosters can be compared to see if students need to be added/removed
-
+![image](https://github.com/GitReadyTeam5/Diamond-Project08-5a/assets/90479750/58632ce2-346d-4339-b329-8f3239971f0b)
 
 # Database and Server Connections
 Not Applicable

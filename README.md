@@ -1,14 +1,14 @@
 # Project 8 Final Documentation
 
 # Features Implemented:
-*Correct sign-in functionality using a Google UID.
-*Google sign-up functionality integration with the preexisting account format.
-*Collection of user’s data: Google Email and ID from adding the user to the Database.
-*Google Token verification for sign-in/sign-up.
-*Google Classroom Assignments created from codesparks
-*Google Classroom Grades transferred from codesparks
-*Google Drive Upload/Retrieve feature
-*Codesparks Rosters can be compared to see if students need to be added/removed
+* Correct sign-in functionality using a Google UID.
+* Google sign-up functionality integration with the preexisting account format.
+* Collection of user’s data: Google Email and ID from adding the user to the Database.
+* Google Token verification for sign-in/sign-up.
+* Google Classroom Assignments created from codesparks
+* Google Classroom Grades transferred from codesparks
+* Google Drive Upload/Retrieve feature
+* Codesparks Rosters can be compared to see if students need to be added/removed
 
 
 # Database and Server Connections
@@ -31,14 +31,14 @@ Same as below
 2. Run `docker compose up` from `/`
 
 # Outstanding Work
-*Removing User Account
-*Google Auto Sign In
-*Adding Individual Links to Assignment Pages
-*Applying roster changes to the backend
-*Frontend page for when users sign-in via their Google accounts
+*R emoving User Account
+* Google Auto Sign In
+* Adding Individual Links to Assignment Pages
+* Applying roster changes to the backend
+* Frontend page for when users sign-in via their Google accounts
 
 # Built Upon
-*Google Console Project and Google AP
+* Google Console Project and Google AP
 
 
 # CaSMM

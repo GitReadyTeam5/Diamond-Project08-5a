@@ -1,3 +1,46 @@
+# Project 8 Final Documentation
+
+# Features Implemented:
+*Correct sign-in functionality using a Google UID.
+*Google sign-up functionality integration with the preexisting account format.
+*Collection of user’s data: Google Email and ID from adding the user to the Database.
+*Google Token verification for sign-in/sign-up.
+*Google Classroom Assignments created from codesparks
+*Google Classroom Grades transferred from codesparks
+*Google Drive Upload/Retrieve feature
+*Codesparks Rosters can be compared to see if students need to be added/removed
+
+
+# Database and Server Connections
+Not Applicable
+
+# Update Database and STRAPI Dump files
+Not Applicable
+
+# Instructions
+Same as below
+`casmm-client-dev` client server (FRONTEND) 
+
+1. Follow the [client](/client#setup) setup
+2. Run `yarn start` from `/client`
+
+`casmm-server-dev`, `casmm-compile-dev`, `casmm-db-dev`, and `casmm-compile_queue-dev` (BACKEND)
+
+1. Install [docker](https://docs.docker.com/get-docker/)
+
+2. Run `docker compose up` from `/`
+
+# Outstanding Work
+*Removing User Account
+*Google Auto Sign In
+*Adding Individual Links to Assignment Pages
+*Applying roster changes to the backend
+*Frontend page for when users sign-in via their Google accounts
+
+# Built Upon
+*Google Console Project and Google AP
+
+
 # CaSMM
 
 > Computation and Science Modeling through Making

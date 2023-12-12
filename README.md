@@ -31,7 +31,7 @@ Same as below
 2. Run `docker compose up` from `/`
 
 # Outstanding Work
-*R emoving User Account
+* Removing User Account
 * Google Auto Sign In
 * Adding Individual Links to Assignment Pages
 * Applying roster changes to the backend
